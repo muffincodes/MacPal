@@ -3,7 +3,7 @@ import SwiftUI
 struct LessonView: View {
     let lesson: Lesson
     @State private var currentStepIndex = 0
-    @State private var showingHelp = false
+    @State private var showingStuckHelp = false
 
     private var currentStep: LessonStep {
         lesson.steps[currentStepIndex]
@@ -31,70 +31,12 @@ struct LessonView: View {
             Divider()
 
             // Instruction area
-            VStack(alignment: .trailing, spacing: 16) {
-                Text(currentStep.instruction)
-                    .font(.title3)
-                    .lineSpacing(6)
-                    .frame(maxWidth: .infinity, alignment: .leading)
-
-                // Help button
-                if currentStep.helpVideoURL != nil || currentStep.helpImageName != nil {
-                    Button(action: { showingHelp.toggle() }) {
-                        ZStack(alignment: .bottomTrailing) {
-                            RoundedRectangle(cornerRadius: 6)
-                                .fill(Color.blue.opacity(0.1))
-                                .frame(width: 36, height: 36)
-
-                            Text("?")
-                                .font(.title2)
-                                .fontWeight(.medium)
-                                .foregroundStyle(.blue)
-                                .frame(width: 36, height: 36)
-
-                            Circle()
-                                .fill(Color.orange)
-                                .frame(width: 10, height: 10)
-                                .offset(x: 3, y: 3)
-                        }
-                    }
-                    .buttonStyle(.plain)
-                    .help("Click for visual help")
-                }
-            }
-            .padding(30)
-            .frame(maxHeight: .infinity)
-
-            // Help panel (shown when ? is clicked)
-            if showingHelp {
-                VStack(spacing: 12) {
-                    if let videoURL = currentStep.helpVideoURL {
-                        HStack {
-                            Image(systemName: "play.circle.fill")
-                                .foregroundStyle(.blue)
-                            Link("Watch a short video showing this step", destination: URL(string: videoURL)!)
-                                .font(.callout)
-                        }
-                    }
-
-                    if let imageName = currentStep.helpImageName {
-                        Image(imageName)
-                            .resizable()
-                            .aspectRatio(contentMode: .fit)
-                            .frame(maxHeight: 150)
-                            .cornerRadius(8)
-                    }
-
-                    Button("Close help") {
-                        showingHelp = false
-                    }
-                    .font(.caption)
-                }
-                .padding()
-                .background(Color.blue.opacity(0.05))
-                .cornerRadius(12)
-                .padding(.horizontal, 30)
-                .padding(.bottom, 20)
-            }
+            Text(currentStep.instruction)
+                .font(.title3)
+                .lineSpacing(6)
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .padding(30)
+                .frame(maxHeight: .infinity)
 
             Divider()
 
@@ -110,11 +52,12 @@ struct LessonView: View {
 
                 Spacer()
 
-                Button(action: { /* TODO: Show stuck help */ }) {
+                Button(action: { showingStuckHelp = true }) {
                     Text("I'm stuck")
                         .frame(width: 100)
                 }
                 .controlSize(.large)
+                .disabled(currentStep.helpImage == nil)
 
                 Button(action: goToNextStep) {
                     Text(isLastStep ? "Finish" : "I did it")
@@ -125,24 +68,58 @@ struct LessonView: View {
             }
             .padding(30)
         }
+        .sheet(isPresented: $showingStuckHelp) {
+            StuckHelpSheet(imageName: currentStep.helpImage)
+        }
     }
 
     private func goToNextStep() {
-        showingHelp = false
         if currentStepIndex < lesson.steps.count - 1 {
             currentStepIndex += 1
         }
     }
 
     private func goToPreviousStep() {
-        showingHelp = false
         if currentStepIndex > 0 {
             currentStepIndex -= 1
         }
     }
 }
 
+struct StuckHelpSheet: View {
+    let imageName: String?
+    @Environment(\.dismiss) private var dismiss
+
+    var body: some View {
+        VStack(spacing: 24) {
+            Text("Here's what to look for")
+                .font(.title2)
+                .fontWeight(.semibold)
+
+            if let imageName = imageName {
+                Image(imageName)
+                    .resizable()
+                    .aspectRatio(contentMode: .fit)
+                    .cornerRadius(12)
+                    .frame(maxWidth: 400, maxHeight: 300)
+            }
+
+            Button("Got it") {
+                dismiss()
+            }
+            .buttonStyle(.borderedProminent)
+            .controlSize(.large)
+        }
+        .padding(40)
+        .frame(minWidth: 450, minHeight: 400)
+    }
+}
+
 #Preview {
     LessonView(lesson: openingClosingWindowLesson)
         .frame(width: 500, height: 600)
+}
+
+#Preview("Stuck Help Sheet") {
+    StuckHelpSheet(imageName: "DockFinder")
 }
