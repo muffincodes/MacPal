@@ -12,6 +12,8 @@
 		1A0000000000000000000003 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1A0000000000000000000013; };
 		1A0000000000000000000004 /* LessonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A0000000000000000000014; };
 		1A0000000000000000000005 /* LessonData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A0000000000000000000015; };
+		1A0000000000000000000006 /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A0000000000000000000016; };
+		1A0000000000000000000007 /* ProgressManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A0000000000000000000017; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -21,6 +23,8 @@
 		1A0000000000000000000013 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		1A0000000000000000000014 /* LessonView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LessonView.swift; sourceTree = "<group>"; };
 		1A0000000000000000000015 /* LessonData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LessonData.swift; sourceTree = "<group>"; };
+		1A0000000000000000000016 /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
+		1A0000000000000000000017 /* ProgressManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgressManager.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -47,8 +51,10 @@
 			children = (
 				1A0000000000000000000011 /* MacPalApp.swift */,
 				1A0000000000000000000012 /* ContentView.swift */,
+				1A0000000000000000000016 /* HomeView.swift */,
 				1A0000000000000000000014 /* LessonView.swift */,
 				1A0000000000000000000015 /* LessonData.swift */,
+				1A0000000000000000000017 /* ProgressManager.swift */,
 				1A0000000000000000000013 /* Assets.xcassets */,
 			);
 			path = MacPal;
@@ -133,8 +139,10 @@
 			files = (
 				1A0000000000000000000001 /* MacPalApp.swift in Sources */,
 				1A0000000000000000000002 /* ContentView.swift in Sources */,
+				1A0000000000000000000006 /* HomeView.swift in Sources */,
 				1A0000000000000000000004 /* LessonView.swift in Sources */,
 				1A0000000000000000000005 /* LessonData.swift in Sources */,
+				1A0000000000000000000007 /* ProgressManager.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

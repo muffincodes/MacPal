@@ -2,8 +2,12 @@ import SwiftUI
 
 struct LessonView: View {
     let lesson: Lesson
+    let onComplete: () -> Void
+    let onExit: () -> Void
+
     @State private var currentStepIndex = 0
     @State private var showingStuckHelp = false
+    @State private var showingCompletion = false
 
     private var currentStep: LessonStep {
         lesson.steps[currentStepIndex]
@@ -15,6 +19,22 @@ struct LessonView: View {
 
     var body: some View {
         VStack(spacing: 0) {
+            // Top bar with exit button
+            HStack {
+                Button(action: onExit) {
+                    HStack(spacing: 4) {
+                        Image(systemName: "chevron.left")
+                        Text("Home")
+                    }
+                }
+                .buttonStyle(.plain)
+                .foregroundStyle(.blue)
+
+                Spacer()
+            }
+            .padding(.horizontal, 20)
+            .padding(.top, 15)
+
             // Header
             VStack(spacing: 8) {
                 Text(lesson.title)
@@ -25,7 +45,7 @@ struct LessonView: View {
                     .font(.subheadline)
                     .foregroundStyle(.secondary)
             }
-            .padding(.top, 30)
+            .padding(.top, 15)
             .padding(.bottom, 20)
 
             Divider()
@@ -71,11 +91,19 @@ struct LessonView: View {
         .sheet(isPresented: $showingStuckHelp) {
             StuckHelpSheet(imageName: currentStep.helpImage)
         }
+        .sheet(isPresented: $showingCompletion) {
+            LessonCompleteSheet(lessonTitle: lesson.title) {
+                onComplete()
+            }
+        }
     }
 
     private func goToNextStep() {
         if currentStepIndex < lesson.steps.count - 1 {
             currentStepIndex += 1
+        } else {
+            // Last step completed
+            showingCompletion = true
         }
     }
 
@@ -115,11 +143,50 @@ struct StuckHelpSheet: View {
     }
 }
 
+struct LessonCompleteSheet: View {
+    let lessonTitle: String
+    let onContinue: () -> Void
+    @Environment(\.dismiss) private var dismiss
+
+    var body: some View {
+        VStack(spacing: 24) {
+            Image(systemName: "checkmark.circle.fill")
+                .font(.system(size: 60))
+                .foregroundStyle(.green)
+
+            Text("Lesson Complete!")
+                .font(.title)
+                .fontWeight(.bold)
+
+            Text("You finished \"\(lessonTitle)\"")
+                .font(.title3)
+                .foregroundStyle(.secondary)
+
+            Button("Continue") {
+                dismiss()
+                onContinue()
+            }
+            .buttonStyle(.borderedProminent)
+            .controlSize(.large)
+        }
+        .padding(40)
+        .frame(minWidth: 400, minHeight: 300)
+    }
+}
+
 #Preview {
-    LessonView(lesson: openingClosingWindowLesson)
-        .frame(width: 500, height: 600)
+    LessonView(
+        lesson: openingClosingWindowLesson,
+        onComplete: {},
+        onExit: {}
+    )
+    .frame(width: 500, height: 600)
 }
 
 #Preview("Stuck Help Sheet") {
     StuckHelpSheet(imageName: "DockFinder")
+}
+
+#Preview("Lesson Complete") {
+    LessonCompleteSheet(lessonTitle: "Opening and Closing a Window", onContinue: {})
 }

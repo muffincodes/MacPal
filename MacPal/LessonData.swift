@@ -7,13 +7,16 @@ struct LessonStep: Identifiable {
 }
 
 struct Lesson: Identifiable {
-    let id = UUID()
+    let id: String
     let title: String
+    let description: String
     let steps: [LessonStep]
 }
 
 let openingClosingWindowLesson = Lesson(
+    id: "opening-closing-window",
     title: "Opening and Closing a Window",
+    description: "Learn to open and close windows using the colored buttons",
     steps: [
         LessonStep(
             instruction: "Look at the bottom of your screen. You'll see a row of icons - this is called the Dock. Find the icon that looks like a blue and white smiling face. This is called Finder.",
@@ -37,3 +40,9 @@ let openingClosingWindowLesson = Lesson(
         )
     ]
 )
+
+// All available lessons in order
+let allLessons: [Lesson] = [
+    openingClosingWindowLesson
+    // Future lessons will be added here
+]
