@@ -14,6 +14,7 @@
 		1A0000000000000000000005 /* LessonData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A0000000000000000000015; };
 		1A0000000000000000000006 /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A0000000000000000000016; };
 		1A0000000000000000000007 /* ProgressManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A0000000000000000000017; };
+		1A0000000000000000000008 /* GIFImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A0000000000000000000018; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -25,6 +26,7 @@
 		1A0000000000000000000015 /* LessonData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LessonData.swift; sourceTree = "<group>"; };
 		1A0000000000000000000016 /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
 		1A0000000000000000000017 /* ProgressManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgressManager.swift; sourceTree = "<group>"; };
+		1A0000000000000000000018 /* GIFImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GIFImage.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -55,6 +57,7 @@
 				1A0000000000000000000014 /* LessonView.swift */,
 				1A0000000000000000000015 /* LessonData.swift */,
 				1A0000000000000000000017 /* ProgressManager.swift */,
+				1A0000000000000000000018 /* GIFImage.swift */,
 				1A0000000000000000000013 /* Assets.xcassets */,
 			);
 			path = MacPal;
@@ -143,6 +146,7 @@
 				1A0000000000000000000004 /* LessonView.swift in Sources */,
 				1A0000000000000000000005 /* LessonData.swift in Sources */,
 				1A0000000000000000000007 /* ProgressManager.swift in Sources */,
+				1A0000000000000000000008 /* GIFImage.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

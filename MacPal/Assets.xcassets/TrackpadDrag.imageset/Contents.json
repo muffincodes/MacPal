@@ -1,0 +1,12 @@
+{
+  "images" : [
+    {
+      "filename" : "TrackpadDrag.gif",
+      "idiom" : "universal"
+    }
+  ],
+  "info" : {
+    "author" : "xcode",
+    "version" : 1
+  }
+}

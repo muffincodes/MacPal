@@ -8,6 +8,7 @@ struct LessonView: View {
     @State private var currentStepIndex = 0
     @State private var showingStuckHelp = false
     @State private var showingCompletion = false
+    @State private var selectedDevice: DeviceType? = nil
 
     private var currentStep: LessonStep {
         lesson.steps[currentStepIndex]
@@ -17,7 +18,24 @@ struct LessonView: View {
         currentStepIndex == lesson.steps.count - 1
     }
 
+    private var needsDeviceSelection: Bool {
+        lesson.requiresDeviceSelection && selectedDevice == nil
+    }
+
     var body: some View {
+        if needsDeviceSelection {
+            DeviceSelectionView(
+                onSelect: { device in
+                    selectedDevice = device
+                },
+                onExit: onExit
+            )
+        } else {
+            lessonContent
+        }
+    }
+
+    private var lessonContent: some View {
         VStack(spacing: 0) {
             // Top bar with exit button
             HStack {
@@ -31,6 +49,16 @@ struct LessonView: View {
                 .foregroundStyle(.blue)
 
                 Spacer()
+
+                // Show selected device if applicable
+                if let device = selectedDevice {
+                    Text(device.rawValue)
+                        .font(.caption)
+                        .padding(.horizontal, 10)
+                        .padding(.vertical, 4)
+                        .background(Color.blue.opacity(0.1))
+                        .cornerRadius(8)
+                }
             }
             .padding(.horizontal, 20)
             .padding(.top, 15)
@@ -51,7 +79,7 @@ struct LessonView: View {
             Divider()
 
             // Instruction area
-            Text(currentStep.instruction)
+            Text(currentStep.instruction(for: selectedDevice))
                 .font(.title3)
                 .lineSpacing(6)
                 .frame(maxWidth: .infinity, alignment: .leading)
@@ -77,7 +105,7 @@ struct LessonView: View {
                         .frame(width: 100)
                 }
                 .controlSize(.large)
-                .disabled(currentStep.helpImage == nil)
+                .disabled(currentStep.helpImage(for: selectedDevice) == nil)
 
                 Button(action: goToNextStep) {
                     Text(isLastStep ? "Finish" : "I did it")
@@ -89,7 +117,7 @@ struct LessonView: View {
             .padding(30)
         }
         .sheet(isPresented: $showingStuckHelp) {
-            StuckHelpSheet(imageName: currentStep.helpImage)
+            StuckHelpSheet(imageName: currentStep.helpImage(for: selectedDevice))
         }
         .sheet(isPresented: $showingCompletion) {
             LessonCompleteSheet(lessonTitle: lesson.title) {
@@ -102,7 +130,6 @@ struct LessonView: View {
         if currentStepIndex < lesson.steps.count - 1 {
             currentStepIndex += 1
         } else {
-            // Last step completed
             showingCompletion = true
         }
     }
@@ -113,6 +140,87 @@ struct LessonView: View {
         }
     }
 }
+
+// MARK: - Device Selection View
+
+struct DeviceSelectionView: View {
+    let onSelect: (DeviceType) -> Void
+    let onExit: () -> Void
+
+    var body: some View {
+        VStack(spacing: 0) {
+            // Top bar with exit button
+            HStack {
+                Button(action: onExit) {
+                    HStack(spacing: 4) {
+                        Image(systemName: "chevron.left")
+                        Text("Home")
+                    }
+                }
+                .buttonStyle(.plain)
+                .foregroundStyle(.blue)
+
+                Spacer()
+            }
+            .padding(.horizontal, 20)
+            .padding(.top, 15)
+
+            Spacer()
+
+            VStack(spacing: 30) {
+                Text("What are you using?")
+                    .font(.title)
+                    .fontWeight(.semibold)
+
+                Text("We'll show you instructions for your device")
+                    .font(.body)
+                    .foregroundStyle(.secondary)
+
+                HStack(spacing: 30) {
+                    DeviceButton(
+                        icon: "computermouse.fill",
+                        title: "Mouse",
+                        onTap: { onSelect(.mouse) }
+                    )
+
+                    DeviceButton(
+                        icon: "hand.draw.fill",
+                        title: "Trackpad",
+                        onTap: { onSelect(.trackpad) }
+                    )
+                }
+                .padding(.top, 20)
+            }
+
+            Spacer()
+        }
+    }
+}
+
+struct DeviceButton: View {
+    let icon: String
+    let title: String
+    let onTap: () -> Void
+
+    var body: some View {
+        Button(action: onTap) {
+            VStack(spacing: 16) {
+                Image(systemName: icon)
+                    .font(.system(size: 50))
+
+                Text(title)
+                    .font(.title3)
+                    .fontWeight(.medium)
+            }
+            .frame(width: 140, height: 140)
+            .background(Color.blue.opacity(0.1))
+            .cornerRadius(20)
+        }
+        .buttonStyle(.plain)
+    }
+}
+
+// MARK: - Stuck Help Sheet
 
 struct StuckHelpSheet: View {
     let imageName: String?
@@ -128,8 +236,8 @@ struct StuckHelpSheet: View {
                 Image(imageName)
                     .resizable()
                     .aspectRatio(contentMode: .fit)
-                    .cornerRadius(12)
-                    .frame(maxWidth: 400, maxHeight: 300)
+                    .frame(width: 350, height: 250)
+                    .clipShape(RoundedRectangle(cornerRadius: 12))
             }
 
             Button("Got it") {
@@ -142,6 +250,8 @@ struct StuckHelpSheet: View {
         .frame(minWidth: 450, minHeight: 400)
     }
 }
+
+// MARK: - Lesson Complete Sheet
 
 struct LessonCompleteSheet: View {
     let lessonTitle: String
@@ -174,10 +284,20 @@ struct LessonCompleteSheet: View {
     }
 }
 
-#Preview {
+// MARK: - Previews
+
+#Preview("Lesson View") {
     LessonView(
         lesson: openingClosingWindowLesson,
         onComplete: {},
+        onExit: {}
+    )
+    .frame(width: 500, height: 600)
+}
+
+#Preview("Device Selection") {
+    DeviceSelectionView(
+        onSelect: { _ in },
         onExit: {}
     )
     .frame(width: 500, height: 600)

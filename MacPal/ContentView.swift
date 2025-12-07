@@ -17,6 +17,7 @@ struct ContentView: View {
                     isInOnboardingFlow = false
                 }
             )
+            .id(lesson.id) // Force view recreation when lesson changes
         } else {
             HomeView(
                 progressManager: progressManager,
