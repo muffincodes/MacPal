@@ -1,0 +1,27 @@
+# Xcode
+build/
+DerivedData/
+*.xcuserstate
+*.xcuserdatad
+xcuserdata/
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Swift Package Manager
+.build/
+.swiftpm/
+
+# Temporary files
+*.swp
+*.lock
+*~
+
+# Our conversation file (not needed in repo)
+2025-12-07-*.txt
+drafts
+
+# Claude Code settings
+.claude/
