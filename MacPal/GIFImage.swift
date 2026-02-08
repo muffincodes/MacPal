@@ -11,9 +11,11 @@ struct AnimatedImage: NSViewRepresentable {
         let containerView = NSView()
         let imageView = NSImageView()
         imageView.canDrawSubviewsIntoLayer = true
-        imageView.imageScaling = .scaleProportionallyUpOrDown
+        imageView.imageScaling = .scaleProportionallyDown
         imageView.animates = true
         imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
+        imageView.setContentCompressionResistancePriority(.defaultLow, for: .vertical)
 
         containerView.addSubview(imageView)
 
@@ -40,6 +42,13 @@ struct AnimatedImage: NSViewRepresentable {
         // Try loading PNG from bundle
         if let url = Bundle.main.url(forResource: name, withExtension: "png"),
            let image = NSImage(contentsOf: url) {
+            imageView.image = image
+            return
+        }
+
+        // Try loading from asset catalog as data asset (preserves GIF animation)
+        if let dataAsset = NSDataAsset(name: name),
+           let image = NSImage(data: dataAsset.data) {
             imageView.image = image
             return
         }

@@ -105,7 +105,7 @@ struct LessonView: View {
                         .frame(width: 100)
                 }
                 .controlSize(.large)
-                .disabled(currentStep.helpImage(for: selectedDevice) == nil)
+                .disabled(currentStep.helpImage(for: selectedDevice) == nil && currentStep.helpTip == nil)
 
                 Button(action: goToNextStep) {
                     Text(isLastStep ? "Finish" : "I did it")
@@ -117,7 +117,7 @@ struct LessonView: View {
             .padding(30)
         }
         .sheet(isPresented: $showingStuckHelp) {
-            StuckHelpSheet(imageName: currentStep.helpImage(for: selectedDevice))
+            StuckHelpSheet(imageName: currentStep.helpImage(for: selectedDevice), helpTip: currentStep.helpTip)
         }
         .sheet(isPresented: $showingCompletion) {
             LessonCompleteSheet(lessonTitle: lesson.title) {
@@ -224,6 +224,7 @@ struct DeviceButton: View {
 
 struct StuckHelpSheet: View {
     let imageName: String?
+    var helpTip: String? = nil
     @Environment(\.dismiss) private var dismiss
 
     var body: some View {
@@ -233,11 +234,17 @@ struct StuckHelpSheet: View {
                 .fontWeight(.semibold)
 
             if let imageName = imageName {
-                Image(imageName)
-                    .resizable()
-                    .aspectRatio(contentMode: .fit)
-                    .frame(width: 350, height: 250)
+                AnimatedImage(name: imageName)
+                    .frame(maxWidth: 350, maxHeight: 250)
                     .clipShape(RoundedRectangle(cornerRadius: 12))
+            }
+
+            if let helpTip = helpTip {
+                Text(helpTip)
+                    .font(.body)
+                    .foregroundStyle(.secondary)
+                    .multilineTextAlignment(.center)
+                    .frame(maxWidth: 350)
             }
 
             Button("Got it") {
